@@ -64,7 +64,7 @@
         <option>I've sold a course before</option>
         <option>I run a growing online education business</option>
       </select>
-    </div>
+    </form>
 
     <div class="question"><label for="q2">What kind of learning experience do you want to deliver?</label>
       <select id="q2">
@@ -106,7 +106,7 @@
 
     <button id="next">See My Result</button>
 
-    <div id="email-capture" class="email-capture">
+    <form id="quizForm" class="email-capture">
       <h3>Almost done! Enter your email to get your recommendation and bonus.</h3>
       <input type="text" id="name" placeholder="Your Name (optional)" />
       <input type="email" id="email" placeholder="Your Email" required />
@@ -163,7 +163,8 @@
     document.getElementById('next').style.display = 'none';
   });
 
-  document.getElementById('submit-email').addEventListener('click', () => {
+  document.getElementById('quizForm').addEventListener('submit', function(e) {
+    e.preventDefault();
     const email = document.getElementById('email').value.trim();
     const name = document.getElementById('name').value.trim();
     if (!email) return alert('Please enter a valid email.');
