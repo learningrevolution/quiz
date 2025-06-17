@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Find Your Course Platform</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #1366d9;
+    }
+    .question {
+      margin: 20px 0;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    select, input, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #1366d9;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0f5bb5;
+    }
+    .results, .email-capture {
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Find Your Ideal Course Platform</h2>
+
+    <div class="question"><label for="q1">What stage are you at?</label>
+      <select id="q1">
+        <option value="">Choose...</option>
+        <option>Just getting started</option>
+        <option>I've sold a course before</option>
+        <option>I run a growing online education business</option>
+      </select>
+    </form>
+
+    <div class="question"><label for="q2">What kind of learning experience do you want to deliver?</label>
+      <select id="q2">
+        <option value="">Choose...</option>
+        <option>Simple on-demand courses</option>
+        <option>Live cohorts or bootcamps</option>
+        <option>Coaching or membership community</option>
+        <option>A mix of all of the above</option>
+      </select>
+    </div>
+
+    <div class="question"><label for="q3">What's your monthly budget for a platform?</label>
+      <select id="q3">
+        <option value="">Choose...</option>
+        <option>$0–50</option>
+        <option>$51–150</option>
+        <option>$151+</option>
+      </select>
+    </div>
+
+    <div class="question"><label for="q4">How tech-comfortable are you?</label>
+      <select id="q4">
+        <option value="">Choose...</option>
+        <option>Not at all—keep it simple</option>
+        <option>I'm fine with a little setup</option>
+        <option>I like to customize things deeply</option>
+      </select>
+    </div>
+
+    <div class="question"><label for="q5">What’s most important to you right now?</label>
+      <select id="q5">
+        <option value="">Choose...</option>
+        <option>Launch quickly</option>
+        <option>Look professional</option>
+        <option>Automate and scale</option>
+        <option>Build community engagement</option>
+      </select>
+    </div>
+
+    <button id="next">See My Result</button>
+
+    <form id="quizForm" class="email-capture">
+      <h3>Almost done! Enter your email to get your recommendation and bonus.</h3>
+      <input type="text" id="name" placeholder="Your Name (optional)" />
+      <input type="email" id="email" placeholder="Your Email" required />
+      <button id="submit-email">Show My Results + Get Bonus</button>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const scores = {
+    "Thinkific": 0, "Kajabi": 0, "LearnWorlds": 0, "Zenler": 0, "Mighty Networks": 0, "Circle": 0
+  };
+
+  const logic = {
+    q1: {
+      "Just getting started": {Thinkific:2,Kajabi:1,Zenler:2},
+      "I've sold a course before": {LearnWorlds:2,Kajabi:2,Thinkific:1},
+      "I run a growing online education business": {Kajabi:3,LearnWorlds:2,"Mighty Networks":1}
+    },
+    q2: {
+      "Simple on-demand courses": {Thinkific:2,Zenler:2},
+      "Live cohorts or bootcamps": {LearnWorlds:3,Kajabi:1},
+      "Coaching or membership community": {Kajabi:2,"Mighty Networks":3,Circle:3},
+      "A mix of all of the above": {Kajabi:3,LearnWorlds:2}
+    },
+    q3: {
+      "$0–50": {Thinkific:2,Zenler:3},
+      "$51–150": {LearnWorlds:2,Thinkific:1},
+      "$151+": {Kajabi:3,"Mighty Networks":1}
+    },
+    q4: {
+      "Not at all—keep it simple": {Thinkific:2,Kajabi:2},
+      "I'm fine with a little setup": {Zenler:2,LearnWorlds:2},
+      "I like to customize things deeply": {LearnWorlds:3,Circle:2}
+    },
+    q5: {
+      "Launch quickly": {Thinkific:2,Zenler:2},
+      "Look professional": {Kajabi:2,LearnWorlds:2},
+      "Automate and scale": {Kajabi:3,LearnWorlds:2},
+      "Build community engagement": {"Mighty Networks":3,Circle:3}
+    }
+  };
+
+  document.getElementById('next').addEventListener('click', () => {
+    Object.keys(scores).forEach(k => scores[k] = 0);
+    for (let i = 1; i <= 5; i++) {
+      const val = document.getElementById('q' + i).value;
+      if (!val || !logic['q' + i][val]) return alert('Please complete all questions.');
+      Object.entries(logic['q' + i][val]).forEach(([platform, pts]) => {
+        scores[platform] += pts;
+      });
+    }
+    document.getElementById('email-capture').style.display = 'block';
+    document.getElementById('next').style.display = 'none';
+  });
+
+  document.getElementById('quizForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const name = document.getElementById('name').value.trim();
+    if (!email) return alert('Please enter a valid email.');
+
+    const topPlatform = Object.entries(scores).sort((a,b) => b[1]-a[1])[0][0];
+    console.log('Sending to Zapier:', { email, name, topPlatform });
+
+    fetch("https://hooks.zapier.com/hooks/catch/241573/uotck8x/", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, name, topPlatform })
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Webhook failed");
+      window.location.href = "https://www.learningrevolution.net/thankyou/platform-quiz/";
+    })
+    .catch(err => {
+      alert('There was an issue submitting your information. Please try again later.');
+      console.error(err);
+    });
+  });
+})();
+</script>
+</body>
+</html>
